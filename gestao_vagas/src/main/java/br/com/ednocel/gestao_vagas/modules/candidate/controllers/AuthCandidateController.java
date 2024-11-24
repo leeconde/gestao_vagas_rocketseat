@@ -1,7 +1,7 @@
-package br.com.ednocel.gestao_vagas.modules.company.controllers;
+package br.com.ednocel.gestao_vagas.modules.candidate.controllers;
 
-import br.com.ednocel.gestao_vagas.modules.company.dto.AuthCompanyDto;
-import br.com.ednocel.gestao_vagas.modules.company.useCases.AuthCompanyUseCase;
+import br.com.ednocel.gestao_vagas.modules.candidate.dto.AuthCandidateRequestDTO;
+import br.com.ednocel.gestao_vagas.modules.candidate.useCases.AuthCandidateUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/company")
-public class AuthCompanyController {
+@RequestMapping("/candidate")
+public class AuthCandidateController {
 
     @Autowired
-    private AuthCompanyUseCase authCompanyUseCase;
+    private AuthCandidateUseCase authCandidateUseCase;
+
 
     @PostMapping("/auth")
-    public ResponseEntity<Object> create(@RequestBody AuthCompanyDto authCompanyDto) {
+    public ResponseEntity<Object> auth(@RequestBody AuthCandidateRequestDTO requestDTO) {
         try {
-            var result = this.authCompanyUseCase.execute(authCompanyDto);
-            return ResponseEntity.ok(result);
+            var token = this.authCandidateUseCase.execute(requestDTO);
+            return ResponseEntity.ok(token);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+
     }
 }

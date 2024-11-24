@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/gestao_vagas.iml" filepath="$PROJECT_DIR$/.idea/gestao_vagas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gestao_vagas/gestao_vagas.iml" filepath="$PROJECT_DIR$/gestao_vagas/gestao_vagas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gestao_vagas_rocketseat.iml" filepath="$PROJECT_DIR$/.idea/gestao_vagas_rocketseat.iml" />
     </modules>
   </component>
 </project>
