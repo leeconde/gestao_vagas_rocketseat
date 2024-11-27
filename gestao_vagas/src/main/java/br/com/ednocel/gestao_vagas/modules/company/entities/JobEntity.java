@@ -1,5 +1,6 @@
 package br.com.ednocel.gestao_vagas.modules.company.entities;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ public class JobEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Schema(example = "Vaga para design")
     private String description;
     private String benefits;
 
