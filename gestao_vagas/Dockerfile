@@ -1,5 +1,26 @@
-FROM ubuntu:latest
+# Etapa de build
+FROM ubuntu:latest AS build
+
+# Atualiza os repositórios de pacotes e instala o JDK 17 e Maven
 RUN apt-get update && apt-get install -y openjdk-17-jdk maven
-WORKDIR /app
+
+# Define o diretório de trabalho
+WORKDIR gestao_vagas /app
+
+# Copia o código-fonte para o contêiner
 COPY . .
-RUN mvn clean install -e -X
+
+# Realiza o build do projeto
+RUN mvn clean package -DskipTests
+
+# Etapa final para execução
+FROM openjdk:17-jdk-slim
+
+# Define a porta exposta
+EXPOSE 8080
+
+# Copia o JAR gerado na etapa anterior para o contêiner final
+COPY --from=build /app/target/gestao_vagas-0.0.1.jar app.jar
+
+# Define o comando de inicialização do aplicativo
+ENTRYPOINT ["java", "-jar", "app.jar"]
