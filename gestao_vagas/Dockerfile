@@ -5,10 +5,10 @@ FROM ubuntu:latest AS build
 RUN apt-get update && apt-get install -y openjdk-17-jdk maven
 
 # Define o diretório de trabalho
-WORKDIR gestao_vagas /app
+WORKDIR /app
 
-# Copia o código-fonte para o contêiner
-COPY . .
+# Copia apenas o diretório do projeto para o contêiner
+COPY gestao_vagas /app
 
 # Realiza o build do projeto
 RUN mvn clean package -DskipTests
