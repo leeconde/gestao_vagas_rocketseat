@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,16 +40,24 @@ public class JobController {
             })
     })
     @SecurityRequirement(name = "jwt_auth")
-    public JobEntity create(@Valid @RequestBody CreateJobDto createJobDto, HttpServletRequest request) {
+    public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDto createJobDto, HttpServletRequest request) {
         String companyIdString = String.valueOf(request.getAttribute("company_id"));
 
-        var jobEntity = JobEntity.builder()
-                .benefits(createJobDto.getBenefits())
-                .companyId(Long.parseLong(companyIdString))
-                .description(createJobDto.getDescription())
-                .level(createJobDto.getLevel())
-                .build();
+        try {
+            var jobEntity = JobEntity.builder()
+                    .benefits(createJobDto.getBenefits())
+                    .companyId(Long.parseLong(companyIdString))
+                    .description(createJobDto.getDescription())
+                    .level(createJobDto.getLevel())
+                    .build();
 
-        return this.createJobUseCase.execute(jobEntity);
+            var result = this.createJobUseCase.execute(jobEntity);
+
+            return ResponseEntity.ok(result);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }

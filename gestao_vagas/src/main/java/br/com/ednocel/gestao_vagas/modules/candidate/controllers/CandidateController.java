@@ -2,6 +2,7 @@ package br.com.ednocel.gestao_vagas.modules.candidate.controllers;
 
 import br.com.ednocel.gestao_vagas.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.ednocel.gestao_vagas.modules.candidate.entities.CandidateEntity;
+import br.com.ednocel.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import br.com.ednocel.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.ednocel.gestao_vagas.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.ednocel.gestao_vagas.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -36,6 +37,9 @@ public class CandidateController {
 
     @Autowired
     private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     @PostMapping("/")
     @Operation(summary = "Cadastro de candidato",
@@ -92,5 +96,20 @@ public class CandidateController {
     @SecurityRequirement(name = "jwt_auth")
     public List<JobEntity> findJobByFilter(@RequestParam String filter) {
         return this.listAllJobsByFilterUseCase.execute(filter);
+    }
+
+    @PostMapping("/job/apply")
+    @PreAuthorize("hasRole('CANDIDATE')")
+    @Operation(summary = "Inscrição do candidato para uma vaga", description = "Essa função é responsável por realizar a inscrição do candidato em uma vaga.")
+    @SecurityRequirement(name = "jwt_auth")
+    public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody Long idJob) {
+        String idCandidate = String.valueOf(request.getAttribute("candidate_id"));
+        try {
+            var result = this.applyJobCandidateUseCase.execute(Long.valueOf(idCandidate), idJob);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 }
