@@ -20,7 +20,7 @@ FROM openjdk:17-jdk-slim
 EXPOSE 8080
 
 # Copia o JAR gerado na etapa anterior para o contêiner final
-COPY --from=build gestao_vagas/target/gestao_vagas-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/gestao_vagas-0.0.1-SNAPSHOT.jar app.jar
 
 # Define o comando de inicialização do aplicativo
 ENTRYPOINT ["java", "-jar", "app.jar"]
